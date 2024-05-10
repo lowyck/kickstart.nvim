@@ -1,0 +1,6 @@
+return {
+	"anufrievroman/vim-angry-reviewer",
+	config = function()
+		vim.g.AngryReviewerEnglish = 'american'
+	end
+}
