@@ -122,13 +122,13 @@ vim.opt.breakindent = true
 
 -- Limit textwidth except on files .mail
 vim.opt.textwidth = 80
-local mail_width_group = vim.api.nvim_create_augroup("MailWidth", { clear = true })
-vim.api.nvim_create_autocmd("BufRead", {
+local mail_width_group = vim.api.nvim_create_augroup('MailWidth', { clear = true })
+vim.api.nvim_create_autocmd('BufRead', {
   pattern = 'mail',
   callback = function()
     vim.o.textwidth = 80
   end,
-  group = mail_width_group
+  group = mail_width_group,
 })
 
 -- Save undo history
@@ -174,7 +174,7 @@ vim.opt.inccommand = 'split'
 vim.opt.cursorline = true
 
 -- Minimal number of screen lines to keep above and below the cursor.
-vim.opt.scrolloff = 10
+vim.opt.scrolloff = 2
 
 -- Make line numbers default
 vim.wo.number = true
@@ -188,14 +188,14 @@ vim.opt.hlsearch = true
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 -- Bépo
-require"custom.bepo"
+require 'custom.bepo'
 
 -- Remap for dealing with word wrap
 -- vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 -- vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
 -- Ignore compiled files
-vim.opt.wildignore:append { '*.o', '*~' ,'*.pyc' ,'*.ocamlc' }
+vim.opt.wildignore:append { '*.o', '*~', '*.pyc', '*.ocamlc' }
 
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' })
@@ -903,7 +903,7 @@ require('lazy').setup({
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
     opts = {
-      ensure_installed = { 'bash', 'ocaml', 'c', 'haskell', 'html', 'lua', 'luadoc', 'vim', 'vimdoc', },
+      ensure_installed = { 'bash', 'ocaml', 'c', 'haskell', 'html', 'lua', 'luadoc', 'vim', 'vimdoc' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
@@ -912,6 +912,7 @@ require('lazy').setup({
         --  If you are experiencing weird indenting issues, add the language to
         --  the list of additional_vim_regex_highlighting and disabled languages for indent.
         additional_vim_regex_highlighting = { 'ruby' },
+        disable = { 'latex' },
       },
       indent = { enable = true, disable = { 'ruby' } },
     },
@@ -977,20 +978,21 @@ require('lazy').setup({
 })
 
 -- Directly use lspconfig for OCaml-LSP
- local lspconfig = require('lspconfig')
- lspconfig.ocamllsp.setup {
-   cmd = { "ocamllsp" },
-   filetypes = { "ocaml", "ocaml.menhir", "ocaml.interface", "ocaml.ocamllex", "dune" },
-   root_dir = lspconfig.util.root_pattern("*.opam", ".git", "dune-project", "dune-workspace")
-   -- on_attach = require('lspconfig').common_on_attach
- }
+local lspconfig = require 'lspconfig'
+lspconfig.ocamllsp.setup {
+  cmd = { 'ocamllsp' },
+  filetypes = { 'ocaml', 'ocaml.menhir', 'ocaml.interface', 'ocaml.ocamllex', 'dune' },
+  root_dir = lspconfig.util.root_pattern('*.opam', '.git', 'dune-project', 'dune-workspace'),
+  -- on_attach = require('lspconfig').common_on_attach
+}
 
 -- .v are coq files
-  vim.api.nvim_create_autocmd({"BufEnter", "BufWinEnter"}, {
-    pattern = {"*.v"},
-    callback = function() vim.opt.filetype = "coq" end,
+vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWinEnter' }, {
+  pattern = { '*.v' },
+  callback = function()
+    vim.opt.filetype = 'coq'
+  end,
 })
-
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
