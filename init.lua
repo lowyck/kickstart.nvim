@@ -197,6 +197,10 @@ require 'custom.bepo'
 -- Ignore compiled files
 vim.opt.wildignore:append { '*.o', '*~', '*.pyc', '*.ocamlc' }
 
+-- Command bar completion
+-- vim.opt.wildmode = 'longest,list,full'
+-- vim.opt.wildmenu = true
+
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' })
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next [D]iagnostic message' })
