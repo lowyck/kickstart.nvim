@@ -194,12 +194,12 @@ require 'custom.bepo'
 -- vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 -- vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
+-- Command bar completion
+vim.opt.wildmode = 'longest,list,full'
+-- vim.opt.wildmenu = true
+vim.opt.wildignorecase = true
 -- Ignore compiled files
 vim.opt.wildignore:append { '*.o', '*~', '*.pyc', '*.ocamlc' }
-
--- Command bar completion
--- vim.opt.wildmode = 'longest,list,full'
--- vim.opt.wildmenu = true
 
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' })
@@ -980,6 +980,10 @@ require('lazy').setup({
     },
   },
 })
+
+-- Block comments for Coq
+local ft = require 'Comment.ft'
+ft.coq = { '(*%s*)', '(*%s*)' }
 
 -- Directly use lspconfig for OCaml-LSP
 local lspconfig = require 'lspconfig'
