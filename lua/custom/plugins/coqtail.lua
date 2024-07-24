@@ -6,7 +6,7 @@ return {
     -- vim.g.coqtail_map_prefix = 't'
     vim.keymap.set('', 'à', '<Plug>CoqNext')
     vim.keymap.set('', 'À', '<Plug>CoqUndo')
-    vim.keymap.set('i', 'à', '<Plug>CoqNext')
-    vim.keymap.set('i', 'À', '<Plug>CoqUndo')
+    -- vim.keymap.set('i', 'à', '<Plug>CoqNext')
+    -- vim.keymap.set('i', 'À', '<Plug>CoqUndo')
   end,
 }
