@@ -1044,10 +1044,6 @@ require('lazy').setup({
   },
 })
 
--- Block comments for Coq
-local ft = require 'Comment.ft'
-ft.coq = { '(*%s*)', '(*%s*)' }
-
 -- Directly use lspconfig for OCaml-LSP
 local lspconfig = require 'lspconfig'
 lspconfig.ocamllsp.setup {
