@@ -99,8 +99,10 @@ vim.g.have_nerd_font = false
 --  For more options, you can see `:help option-list`
 
 -- Make line numbers default
-vim.wo.number = true
-vim.wo.relativenumber = true
+vim.o.number = true
+-- You can also add relative line numbers, to help with jumping.
+--  Experiment for yourself to see if you like it!
+vim.o.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.o.mouse = 'a'
@@ -116,12 +118,12 @@ vim.schedule(function()
   vim.o.clipboard = 'unnamedplus'
 end)
 
--- Visually break lines at relevant characters (moi ?)
+-- Visually break lines at relevant characters (perso)
 vim.opt.linebreak = true
 -- Enable break indent
 vim.o.breakindent = true
 
--- Limit textwidth except on files .mail
+-- Limit textwidth except on files .mail (perso)
 vim.opt.textwidth = 80
 local mail_width_group = vim.api.nvim_create_augroup('MailWidth', { clear = true })
 vim.api.nvim_create_autocmd('BufRead', {
@@ -139,7 +141,7 @@ vim.o.undofile = true
 vim.o.ignorecase = true
 vim.o.smartcase = true
 
--- Don't need g to replace globably; g replaces first occurence only
+-- Don't need g to replace globably; g replaces first occurence only (perso)
 vim.opt.gdefault = true
 
 -- Keep signcolumn on by default
@@ -151,10 +153,10 @@ vim.o.updatetime = 250
 -- Decrease mapped sequence wait time
 vim.o.timeoutlen = 300
 
--- NOTE: You should make sure your terminal supports this (moi ?)
+-- NOTE: You should make sure your terminal supports this (perso)
 vim.o.termguicolors = true
 
--- Move freely around the screen in visual block mode (moi ?)
+-- Move freely around the screen in visual block mode (perso)
 vim.o.virtualedit = 'block'
 
 -- Configure how new splits should be opened
@@ -193,7 +195,7 @@ vim.o.confirm = true
 --  See `:help hlsearch`
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
--- Bépo
+-- Bépo (perso)
 require 'custom.bepo'
 
 -- Remap for dealing with word wrap
@@ -210,6 +212,7 @@ vim.opt.wildignore:append { '*.o', '*~', '*.pyc', '*.ocamlc' }
 -- Diagnostic keymaps
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 -- Ajouté moi-même, je sais pas pourquoi il y avait plus d'action
+-- TODO: voir si encore utile
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open diagnostic [E]rror on the line' })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
@@ -284,6 +287,7 @@ rtp:prepend(lazypath)
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'NMAC427/guess-indent.nvim', -- Detect tabstop and shiftwidth automatically
+  -- TODO: remettre ?
   -- 'numToStr/Comment.nvim',
 
   -- NOTE: Plugins can also be added by using a table,
@@ -795,8 +799,6 @@ require('lazy').setup({
         -- have a well standardized coding style. You can add additional
         -- languages here or re-enable it for the disabled ones.
         local disable_filetypes = { c = true, cpp = true, tex = true, haskell = true }
-        -- local lsp_format_opt (Avant update)
-        local disable_filetypes = { c = true, cpp = true }
         if disable_filetypes[vim.bo[bufnr].filetype] then
           return nil
         else
