@@ -123,16 +123,18 @@ vim.opt.linebreak = true
 -- Enable break indent
 vim.o.breakindent = true
 
--- Limit textwidth except on files .mail (perso)
-vim.opt.textwidth = 80
-local mail_width_group = vim.api.nvim_create_augroup('MailWidth', { clear = true })
-vim.api.nvim_create_autocmd('BufRead', {
-  pattern = 'mail',
-  callback = function()
-    vim.o.textwidth = 80
-  end,
-  group = mail_width_group,
-})
+-- Limit textwidth on comments but not text, still gq can be used to format
+vim.o.textwidth = 80
+vim.o.formatoptions = 'jcroql'
+-- To not break lines in mails
+-- local mail_width_group = vim.api.nvim_create_augroup('MailWidth', { clear = true })
+-- vim.api.nvim_create_autocmd('BufRead', {
+--   pattern = 'mail',
+--   callback = function()
+--     vim.o.textwidth = 80
+--   end,
+--   group = mail_width_group,
+-- })
 
 -- Save undo history
 vim.o.undofile = true
