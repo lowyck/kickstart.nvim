@@ -205,8 +205,7 @@ require 'custom.bepo'
 -- vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
 -- Command bar completion
-vim.opt.wildmode = 'longest,list,full'
--- vim.opt.wildmenu = true
+vim.opt.wildmode = 'list:longest,full'
 vim.opt.wildignorecase = true
 -- Ignore compiled files
 vim.opt.wildignore:append { '*.o', '*~', '*.pyc', '*.ocamlc' }
@@ -288,9 +287,14 @@ rtp:prepend(lazypath)
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
-  'NMAC427/guess-indent.nvim', -- Detect tabstop and shiftwidth automatically
-  -- TODO: remettre ?
-  -- 'numToStr/Comment.nvim',
+  {
+    'NMAC427/guess-indent.nvim', -- Detect tabstop and shiftwidth automatically
+    opts = {
+      on_tab_options = { -- A table of vim options when tabs are detected
+        ['expandtab'] = false,
+      },
+    },
+  },
 
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
@@ -714,7 +718,15 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-        hls = {},
+        -- hls = {}, -- Maybe use vim.lsp.enable('hls') to use the version install by GHCup
+        tinymist = {
+          settings = {
+            formatterMode = 'typstyle',
+            exportPdf = 'onType',
+            semanticTokens = 'disable',
+          },
+        },
+
         -- clangd = {},
         -- gopls = {},
         -- pyright = {},
@@ -800,7 +812,7 @@ require('lazy').setup({
         -- Disable "format_on_save lsp_fallback" for languages that don't
         -- have a well standardized coding style. You can add additional
         -- languages here or re-enable it for the disabled ones.
-        local disable_filetypes = { c = true, cpp = true, tex = true, haskell = true }
+        local disable_filetypes = { c = true, cpp = true, tex = true, bib = true }
         if disable_filetypes[vim.bo[bufnr].filetype] then
           return nil
         else
@@ -812,6 +824,7 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
+        haskell = { 'ormolu' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
@@ -876,6 +889,7 @@ require('lazy').setup({
         -- <c-space>: Open menu or open docs if already open
         -- <c-n>/<c-p> or <up>/<down>: Select next/previous item
         -- <c-e>: Hide menu
+        -- TODO: Problem with <c-k> comes from here
         -- <c-k>: Toggle signature help
         --
         -- See :h blink-cmp-config-keymap for defining your own keymap
@@ -1028,10 +1042,10 @@ require('lazy').setup({
         -- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
         --  If you are experiencing weird indenting issues, add the language to
         --  the list of additional_vim_regex_highlighting and disabled languages for indent.
-        additional_vim_regex_highlighting = { 'ruby' },
+        additional_vim_regex_highlighting = {},
         disable = { 'latex' },
       },
-      indent = { enable = true, disable = { 'ruby', 'coq' } },
+      indent = { enable = true, disable = { 'coq' } },
     },
     -- There are additional nvim-treesitter modules that you can use to interact
     -- with nvim-treesitter. You should go explore a few and see what interests you:
@@ -1098,6 +1112,26 @@ lspconfig.ocamllsp.setup {
   -- on_attach = require('lspconfig').common_on_attach
 }
 
+-- To deal with multi-file Typst projects
+require('lspconfig')['tinymist'].setup { -- Alternatively, can be used `vim.lsp.config["tinymist"]`
+  on_attach = function(client, bufnr)
+    vim.keymap.set('n', '<leader>tp', function()
+      client:exec_cmd({
+        title = 'pin',
+        command = 'tinymist.pinMain',
+        arguments = { vim.api.nvim_buf_get_name(0) },
+      }, { bufnr = bufnr })
+    end, { desc = '[T]inymist [P]in', noremap = true })
+    vim.keymap.set('n', '<leader>tu', function()
+      client:exec_cmd({
+        title = 'unpin',
+        command = 'tinymist.pinMain',
+        arguments = { vim.v.null },
+      }, { bufnr = bufnr })
+    end, { desc = '[T]inymist [U]npin', noremap = true })
+  end,
+}
+
 -- .v are coq files
 vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWinEnter' }, {
   pattern = { '*.v' },
@@ -1105,6 +1139,17 @@ vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWinEnter' }, {
     vim.opt.filetype = 'coq'
   end,
 })
+
+-- LSPs not installed through Mason (for correct versioning), using version
+-- 0.11 capabilities
+-- Same config as lspconfig
+-- vim.lsp.config['coq-lsp'] = {
+--   cmd = { 'coq-lsp' },
+--   filetypes = { 'coq' },
+--   root_markers = { '_CoqProject', '.git' },
+-- }
+vim.lsp.enable 'coq-lsp'
+vim.lsp.enable 'hls'
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
