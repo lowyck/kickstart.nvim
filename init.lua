@@ -756,6 +756,16 @@ require('lazy').setup({
         },
       }
 
+      -- Now setup those configurations
+      for name, config in pairs(servers) do
+        local config = config or {}
+        -- This handles overriding only values explicitly passed
+        -- by the server configuration above. Useful when disabling
+        -- certain features of an LSP (for example, turning off formatting for ts_ls)
+        config.capabilities = vim.tbl_deep_extend('force', {}, capabilities, config.capabilities or {})
+        vim.lsp.config(name, config)
+      end
+
       -- Ensure the servers and tools above are installed
       --
       -- To check the current status of installed tools and/or manually install
@@ -778,16 +788,6 @@ require('lazy').setup({
       require('mason-lspconfig').setup {
         ensure_installed = {}, -- explicitly set to an empty table (Kickstart populates installs via mason-tool-installer)
         automatic_installation = false,
-        handlers = {
-          function(server_name)
-            local server = servers[server_name] or {}
-            -- This handles overriding only values explicitly passed
-            -- by the server configuration above. Useful when disabling
-            -- certain features of an LSP (for example, turning off formatting for ts_ls)
-            server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-            require('lspconfig')[server_name].setup(server)
-          end,
-        },
       }
     end,
   },
@@ -1103,17 +1103,33 @@ require('lazy').setup({
   },
 })
 
--- Directly use lspconfig for OCaml-LSP
+-- .v are coq files
+vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWinEnter' }, {
+  pattern = { '*.v' },
+  callback = function()
+    vim.opt.filetype = 'coq'
+  end,
+})
+
+-- LSPs not installed through Mason (for correct versioning), using version
+-- 0.11 capabilities
+vim.lsp.enable 'coq-lsp'
+vim.lsp.enable 'hls'
+vim.lsp.enable 'ocamllsp'
+
+--[[ -- Directly use lspconfig for OCaml-LSP (remove if lsp.enable works)
 local lspconfig = require 'lspconfig'
 lspconfig.ocamllsp.setup {
   cmd = { 'ocamllsp' },
   filetypes = { 'ocaml', 'ocaml.menhir', 'ocaml.interface', 'ocaml.ocamllex', 'dune' },
   root_dir = lspconfig.util.root_pattern('*.opam', '.git', 'dune-project', 'dune-workspace'),
   -- on_attach = require('lspconfig').common_on_attach
-}
+} ]]
 
--- To deal with multi-file Typst projects
-require('lspconfig')['tinymist'].setup { -- Alternatively, can be used `vim.lsp.config["tinymist"]`
+vim.lsp.config['tinymist'] = {
+  cmd = { 'tinymist' },
+  filetypes = { 'typst' },
+  -- To deal with multi-file Typst projects
   on_attach = function(client, bufnr)
     vim.keymap.set('n', '<leader>tp', function()
       client:exec_cmd({
@@ -1131,25 +1147,6 @@ require('lspconfig')['tinymist'].setup { -- Alternatively, can be used `vim.lsp.
     end, { desc = '[T]inymist [U]npin', noremap = true })
   end,
 }
-
--- .v are coq files
-vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWinEnter' }, {
-  pattern = { '*.v' },
-  callback = function()
-    vim.opt.filetype = 'coq'
-  end,
-})
-
--- LSPs not installed through Mason (for correct versioning), using version
--- 0.11 capabilities
--- Same config as lspconfig
--- vim.lsp.config['coq-lsp'] = {
---   cmd = { 'coq-lsp' },
---   filetypes = { 'coq' },
---   root_markers = { '_CoqProject', '.git' },
--- }
-vim.lsp.enable 'coq-lsp'
-vim.lsp.enable 'hls'
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
