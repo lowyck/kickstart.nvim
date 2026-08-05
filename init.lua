@@ -718,7 +718,6 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-        -- hls = {}, -- Maybe use vim.lsp.enable('hls') to use the version install by GHCup
         tinymist = {
           settings = {
             formatterMode = 'typstyle',
@@ -1103,28 +1102,20 @@ require('lazy').setup({
   },
 })
 
--- .v are coq files
+--[[ -- .v are coq files
 vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWinEnter' }, {
   pattern = { '*.v' },
   callback = function()
     vim.opt.filetype = 'coq'
   end,
-})
+}) ]]
 
 -- LSPs not installed through Mason (for correct versioning), using version
 -- 0.11 capabilities
-vim.lsp.enable 'coq-lsp'
+vim.lsp.enable 'coq_lsp'
 vim.lsp.enable 'hls'
 vim.lsp.enable 'ocamllsp'
-
---[[ -- Directly use lspconfig for OCaml-LSP (remove if lsp.enable works)
-local lspconfig = require 'lspconfig'
-lspconfig.ocamllsp.setup {
-  cmd = { 'ocamllsp' },
-  filetypes = { 'ocaml', 'ocaml.menhir', 'ocaml.interface', 'ocaml.ocamllex', 'dune' },
-  root_dir = lspconfig.util.root_pattern('*.opam', '.git', 'dune-project', 'dune-workspace'),
-  -- on_attach = require('lspconfig').common_on_attach
-} ]]
+vim.lsp.enable 'rust_analyzer'
 
 vim.lsp.config['tinymist'] = {
   cmd = { 'tinymist' },
