@@ -1,6 +1,2 @@
-return {
-  'anufrievroman/vim-angry-reviewer',
-  config = function()
-    vim.g.AngryReviewerEnglish = 'american'
-  end,
-}
+vim.pack.add { 'https://github.com/anufrievroman/vim-angry-reviewer' }
+vim.g.AngryReviewerEnglish = 'american'
