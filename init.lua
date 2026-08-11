@@ -882,8 +882,8 @@ do
   --    See the README about individual language/framework/plugin snippets:
   --    https://github.com/rafamadriz/friendly-snippets
   --
-  -- vim.pack.add { gh 'rafamadriz/friendly-snippets' }
-  -- require('luasnip.loaders.from_vscode').lazy_load()
+  vim.pack.add { gh 'rafamadriz/friendly-snippets' }
+  require('luasnip.loaders.from_vscode').lazy_load()
 
   -- [[ Autocomplete Engine ]]
   vim.pack.add { { src = gh 'saghen/blink.cmp', version = vim.version.range '1.*' } }
@@ -907,7 +907,7 @@ do
       -- <c-space>: Open menu or open docs if already open
       -- <c-n>/<c-p> or <up>/<down>: Select next/previous item
       -- <c-e>: Hide menu
-      -- <c-k>: Toggle signature help
+      -- <c-k>: Toggle signature help -- NOTE: problem comes from here
       --
       -- See `:help blink-cmp-config-keymap` for defining your own keymap
       preset = 'default',
