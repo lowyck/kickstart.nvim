@@ -30,6 +30,10 @@
       "rev": "84a4987ff36798c2fc1169cbaff67960aed9776f",
       "src": "https://github.com/NMAC427/guess-indent.nvim"
     },
+    "lean.nvim": {
+      "rev": "dbfa4928652229c92bd02c21dffa1b7e8d20a108",
+      "src": "https://github.com/Julian/lean.nvim"
+    },
     "mason-lspconfig.nvim": {
       "rev": "67029ccdac1ef8941e13b826417bc0ffac24cc86",
       "src": "https://github.com/mason-org/mason-lspconfig.nvim"

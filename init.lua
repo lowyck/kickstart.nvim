@@ -110,7 +110,7 @@ do
   vim.o.number = true
   -- You can also add relative line numbers, to help with jumping.
   --  Experiment for yourself to see if you like it!
-  -- vim.o.relativenumber = true
+  vim.o.relativenumber = true
 
   -- Enable mouse mode, can be useful for resizing splits for example!
   vim.o.mouse = 'a'
@@ -194,8 +194,7 @@ do
   vim.opt.linebreak = true
   -- Don't need g to replace globably; g replaces first occurence only (perso)
   vim.opt.gdefault = true
-
-  end
+end
 
 -- ============================================================
 -- SECTION 2: KEYMAPS & AUTOCMDS
@@ -243,6 +242,8 @@ do
   }
 
   vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+  -- Perso
+  vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open diagnostic [E]rror on the line' })
 
   -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
   -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
@@ -731,12 +732,12 @@ do
     -- gopls = {},
     -- pyright = {},
     -- rust_analyzer = {},
-   tinymist = {
-          settings = {
-            formatterMode = 'typstyle',
-            exportPdf = 'onType',
-            semanticTokens = 'disable',
-          },
+    tinymist = {
+      settings = {
+        formatterMode = 'typstyle',
+        exportPdf = 'onType',
+        semanticTokens = 'disable',
+      },
     },
     -- Some languages (like typescript) have entire language plugins that can be useful:
     --    https://github.com/pmizio/typescript-tools.nvim
@@ -815,6 +816,9 @@ do
     vim.lsp.config(name, server)
     vim.lsp.enable(name)
   end
+
+  -- Format on save (perso)
+  -- vim.cmd [[autocmd BufWritePre * lua vim.lsp.buf.format()]]
 
   -- Manually installed servers (perso)
   vim.lsp.enable 'coq_lsp'
