@@ -111,6 +111,10 @@
       "rev": "1d5436c0f55490893892441c0eca55e6cdf4916c",
       "src": "https://github.com/kaarmu/typst.vim"
     },
+    "vim-smt2": {
+      "rev": "6887cc6dfc51d4e6461f3c99cde76c3538f0d33d",
+      "src": "https://github.com/bohlender/vim-smt2"
+    },
     "vim-tidal": {
       "rev": "e440fe5bdfe07f805e21e6872099685d38e8b761",
       "src": "https://github.com/tidalcycles/vim-tidal"
