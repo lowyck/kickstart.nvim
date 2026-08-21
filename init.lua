@@ -912,6 +912,18 @@ do
       -- See `:help blink-cmp-config-keymap` for defining your own keymap
       preset = 'default',
 
+      -- Integration with sidekick.nvim in insert mode (perso)
+      ['<Tab>'] = {
+        'snippet_forward',
+        function() -- sidekick next edit suggestion
+          return require('sidekick').nes_jump_or_apply()
+        end,
+        function() -- if you are using Neovim's native inline completions
+          return vim.lsp.inline_completion.get()
+        end,
+        'fallback',
+      },
+
       -- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
       --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
     },
@@ -1027,7 +1039,7 @@ do
   -- require 'kickstart.plugins.debug'
   -- require 'kickstart.plugins.indent_line'
   -- require 'kickstart.plugins.lint'
-  require 'kickstart.plugins.autopairs'
+  -- require 'kickstart.plugins.autopairs'
   -- require 'kickstart.plugins.neo-tree'
   require 'kickstart.plugins.gitsigns' -- adds gitsigns recommended keymaps
 
